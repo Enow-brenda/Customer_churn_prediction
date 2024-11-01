@@ -213,6 +213,31 @@ sgd_model.fit(X_year1_scaled, y1_balanced, sample_weight=weights_1)
 sgd_model.partial_fit(X_year2_scaled, y2_balanced, sample_weight=weights_2)
 
 
+# Incremental training on Year 3 using partial_fit
+sgd_model.partial_fit(X_year3_scaled, y3_balanced, sample_weight=weights_3)
+
+# Evaluate on Year 1
+y_pred_year1 = sgd_model.predict(X_year1_scaled)
+accuracy_year1 = accuracy_score(y1_balanced, y_pred_year1)
+
+# Evaluate on Year 2
+y_pred_year2 = sgd_model.predict(X_year2_scaled)
+accuracy_year2 = accuracy_score(y2_balanced, y_pred_year2)
+
+# Evaluate on Year 3
+y_pred_year3 = sgd_model.predict(X_year3_scaled)
+accuracy_year3 = accuracy_score(y3_balanced, y_pred_year3)
+
+# Print metrics for each year
+print(f"Online Learning Model - Year 1 Metrics:")
+print(f"Accuracy: {accuracy_year1}")
+
+print(f"Online Learning Model - Year 2 Metrics:")
+print(f"Accuracy: {accuracy_year2}")
+
+print(f"Online Learning Model - Year 3 Metrics:")
+print(f"Accuracy: {accuracy_year3}")
+
 # Train separate models for year2 and year3
 sgd_model_year2 = SGDClassifier(max_iter=1000, tol=1e-3)
 sgd_model_year3 = SGDClassifier(max_iter=1000, tol=1e-3)
@@ -255,9 +280,19 @@ weights_1_2 = np.concatenate([weights_1, weights_2])
 ensemble_model.fit(x_1_2, y_1_2)
 
 #Predict on Year 3 using the ensemble model
+y2_pred_ensemble = ensemble_model.predict(X_year2_scaled)
 y3_pred_ensemble = ensemble_model.predict(X_year3_scaled)
 
+# Evaluate Model Performance on Year 2
+ensemble_accuracy2 = accuracy_score(y2_balanced, y2_pred_ensemble)
+ensemble_precision = precision_score(y2_balanced, y2_pred_ensemble)
+ensemble_recall = recall_score(y2_balanced, y2_pred_ensemble)
+ensemble_f1 = f1_score(y2_balanced, y2_pred_ensemble)
 
+print(f"Ensemble Model - Accuracy: {ensemble_accuracy2}")
+print(f"Ensemble Model - Precision: {ensemble_precision}")
+print(f"Ensemble Model - Recall: {ensemble_recall}")
+print(f"Ensemble Model - F1 Score: {ensemble_f1}")
 
 # Evaluate Model Performance on Year 3
 ensemble_accuracy = accuracy_score(y3_balanced, y3_pred_ensemble)
